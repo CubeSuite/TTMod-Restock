@@ -13,7 +13,7 @@ namespace Restock
     {
         private const string MyGUID = "com.equinox.Restock";
         private const string PluginName = "Restock";
-        private const string VersionString = "1.0.0";
+        private const string VersionString = "2.0.0";
 
         private static readonly Harmony Harmony = new Harmony(MyGUID);
         public static ManualLogSource Log = new ManualLogSource(PluginName);
@@ -61,7 +61,8 @@ namespace Restock
                     if (curerntStack >= maxStack) continue;
 
                     int numPlayerNeeds = maxStack - curerntStack;
-                    int toSend = numPlayerNeeds > stack.count ? stack.count : numPlayerNeeds;
+                    int toSend = numPlayerNeeds > stack.count ? stack.count - 1 : numPlayerNeeds;
+                    if (toSend == 0) continue;
 
                     int resID = stack.info.uniqueId;
                     if(!Player.instance.inventory.CanAddResources(resID, toSend)) {
@@ -71,7 +72,6 @@ namespace Restock
 
                     inventory.TryRemoveResources(stack.info.uniqueId, toSend);
                     Player.instance.inventory.AddResources(resID, toSend);
-                    Debug.Log($"Sent {toSend} of {stack.info.displayName} to player");
                 }
             }
         }
