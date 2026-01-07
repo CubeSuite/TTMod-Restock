@@ -36,7 +36,10 @@ namespace Restock
 
             restockRadius = Config.Bind<int>("General", restockRadiusKey, 5, new ConfigDescription("The radius around the player to scan for chests", new AcceptableValueRange<int>(0, 10)));
 
-            foreach (string name in ResourceNames.SafeResources) {
+            foreach (string name in EMU.Names.Resources.SafeResources) {
+                // Skip duplicates in the resource list
+                if (stacksDictionary.ContainsKey(name)) continue;
+
                 bool isBuilding = IsItemBuilding(name);
                 string category = isBuilding ? "Buildings" : "Items";
                 int defaultValue = isBuilding ? 1 : 0;
@@ -92,10 +95,10 @@ namespace Restock
         // Private Functions
 
         private bool IsItemBuilding(string name) {
-            int index = ResourceNames.SafeResources.IndexOf(name);
-            int bioBrickIndex = ResourceNames.SafeResources.IndexOf(ResourceNames.Biobrick);
-            int powerFloorIndex = ResourceNames.SafeResources.IndexOf(ResourceNames.PowerFloor);
-            int cornerIndex = ResourceNames.SafeResources.IndexOf(ResourceNames.SectionalCorner2x2);
+            int index = EMU.Names.Resources.SafeResources.IndexOf(name);
+            int bioBrickIndex = EMU.Names.Resources.SafeResources.IndexOf(EMU.Names.Resources.Biobrick);
+            int powerFloorIndex = EMU.Names.Resources.SafeResources.IndexOf(EMU.Names.Resources.PowerFloor);
+            int cornerIndex = EMU.Names.Resources.SafeResources.IndexOf(EMU.Names.Resources.SectionalCorner2x2);
 
             if (index < bioBrickIndex) return true;
             if (index >= powerFloorIndex && index <= cornerIndex) return true;
